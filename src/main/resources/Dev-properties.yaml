@@ -1,0 +1,6 @@
+apiId: "17313769"
+
+ponysay:
+  host: "ponysay.ops.versent.com.au"
+  pokemonsay-path: "/pokemonsay"
+  pokemonthink-path: "/pokemonthink"

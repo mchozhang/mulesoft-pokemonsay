@@ -1,0 +1,34 @@
+#%RAML 1.0
+title: New API
+version: "1.0"
+/pokemon:
+  get:
+    queryParameters:
+      think?:
+        description: pokemon think or say
+        default: false
+        example: true
+        type: boolean
+      repeat?:
+        description: repeat pokemonsay for a number less than 10
+        default: 1
+        example: 3
+        type: number
+        format: int
+      msg?:
+        description: message say or think by the pokemon
+        default: ""
+        example: Hello
+        type: string
+    responses:
+      "200":
+        body:
+          text/html:
+            example: Example
+            type: string
+      "400":
+        description: |
+          Exceeded repeat limit.
+        body:
+          application/json:
+            type: object

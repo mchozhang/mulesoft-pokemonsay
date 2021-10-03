@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns="http://www.mulesoft.org/schema/mule/core"
+      xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:http="http://www.mulesoft.org/schema/mule/http"
+      xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+      http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+      http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+  <sub-flow name="parseQueryParams" doc:id="82bd0f4b-f4dd-48bd-9567-244f40911439">
+    <set-variable value="#[attributes.queryParams.repeat]" doc:name="Set Repeat" doc:id="ee2e27d8-1eec-44e3-a7a3-d65dd46be29d" variableName="repeat"/>
+    <set-variable value="#[attributes.queryParams.think]" doc:name="Set Think" doc:id="28b8b0e7-6a37-494e-ad99-1b95987a7ee1" variableName="think"/>
+    <set-variable value="#[attributes.queryParams.msg]" doc:name="Set Message" doc:id="58099450-8cc6-4f62-a0fa-d22c61c0c31c" variableName="message"/>
+  </sub-flow>
+
+  <sub-flow name="setRequestPath">
+    <set-variable value="" doc:name="Set Path" doc:id="11a0b3f9-f591-429b-9ab5-922f4849d4d9" variableName="path"/>
+    <choice doc:name="Think Choice" doc:id="d48ca664-181b-4170-b630-92230db75225">
+      <when expression="#[vars.think]">
+        <set-variable value="${ponysay.pokemonthink-path}" variableName="pokemonAction" doc:name="Set Action Think "/>
+      </when>
+      <otherwise>
+        <set-variable value="${ponysay.pokemonsay-path}" doc:name="Set Action Say" doc:id="d14ecf0f-f3a7-4070-a73b-4e82a7c3a858" variableName="pokemonAction"/>
+      </otherwise>
+    </choice>
+
+    <set-variable value="#[1 to vars.repeat]" doc:name="Set Repeat List" doc:id="591e074e-ab35-463f-b378-7101b8403339" variableName="repeatList"/>
+    <foreach doc:name="For Each" doc:id="fddc9745-c7df-4b5d-9ba7-c9761c53344a" collection="vars.repeatList">
+      <set-variable value="#[vars.path ++ vars.pokemonAction]" doc:name="Set Path" doc:id="d638e82b-bf67-4f24-b080-3d0bb7a44499" variableName="path"/>
+    </foreach>
+  </sub-flow>
+
+  <sub-flow name="pokemonRequest" doc:id="3497932a-0d67-4d13-be0f-24f8a4b233e6">
+    <flow-ref doc:name="Set Request Path" doc:id="a5f7a26e-e4fd-47bc-8044-c5496ac97bea" name="setRequestPath"/>
+
+    <http:request method="GET" doc:name="Request" doc:id="50204307-9682-44cf-84ef-132b1fb95e6b" config-ref="HTTP_Request_configuration" path="#[vars.path]"
+                  sendCorrelationId="AUTO">
+      <http:query-params><![CDATA[#[output application/java
+---
+{
+	"msg" : vars.message
+}]]]></http:query-params>
+    </http:request>
+  </sub-flow>
+
+  <sub-flow name="getPokemon" doc:id="201b7aaa-719b-4447-9b85-509e9780f4fd">
+    <flow-ref doc:name="parseQueryParams" doc:id="5da08e62-020c-4413-be5a-cac7caa67c97" name="parseQueryParams"/>
+    <choice doc:name="Repeat Choice" doc:id="9df7b54f-cc54-475d-af05-1765f13c0990">
+      <when expression="#[(0 &lt; vars.repeat) and (vars.repeat &lt; 11)]">
+        <flow-ref doc:name="pokemonRequest" doc:id="bb2bd013-ec2e-4ddd-8a6c-1b0a21d0578f" name="pokemonRequest"/>
+      </when>
+      <otherwise>
+        <ee:transform doc:name="Transform Message" doc:id="796e23c8-0ca9-4d4e-824b-7e9708d9d1d9">
+          <ee:message>
+            <ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+{
+	msg: "Valid repeat number is between 1 to 10."
+}]]></ee:set-payload>
+          </ee:message>
+          <ee:variables>
+            <ee:set-variable variableName="httpStatus"><![CDATA[400]]></ee:set-variable>
+          </ee:variables>
+        </ee:transform>
+      </otherwise>
+    </choice>
+  </sub-flow>
+</mule>

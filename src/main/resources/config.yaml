@@ -1,0 +1,18 @@
+https.private.port: "8092"
+
+api:
+  name: "pokemon-say"
+  version: "1.0"
+  path: "/pokemonsay/v1/api/*"
+
+anypoint:
+  platform:
+    config:
+      analytics:
+        agent:
+          enabled: "true"
+
+alert:
+  include: "*"
+  exclude: ""     
+     

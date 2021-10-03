@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <groupId>b9784a55-971e-4d78-b9c2-99fc407af58d</groupId>
+  <artifactId>pokemonsay</artifactId>
+  <version>1.0.0</version>
+  <packaging>mule-application</packaging>
+
+  <name>pokemonsay</name>
+
+  <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+    <app.runtime>4.3.0</app.runtime>
+    <mule.version>4.3.0</mule.version>
+    <mule.maven.plugin.version>3.4.2</mule.maven.plugin.version>
+    <cloudhub.username>svc-digital-deploy</cloudhub.username>
+    <raml.asset.id>pokemonsay</raml.asset.id>
+    <raml.asset.version>1.0.2</raml.asset.version>
+  </properties>
+
+  <parent>
+    <groupId>b9784a55-971e-4d78-b9c2-99fc407af58d</groupId>
+    <artifactId>api-parent-pom-mule4</artifactId>
+    <version>1.0.20</version>
+  </parent>
+
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-clean-plugin</artifactId>
+        <version>3.0.0</version>
+      </plugin>
+      <plugin>
+        <groupId>org.mule.tools.maven</groupId>
+        <artifactId>mule-maven-plugin</artifactId>
+        <version>${mule.maven.plugin.version}</version>
+        <extensions>true</extensions>
+      </plugin>
+    </plugins>
+  </build>
+
+  <dependencies>
+  </dependencies>
+</project>
